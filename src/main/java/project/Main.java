@@ -1,18 +1,15 @@
 package project;
 
-import net.twasi.obsremotejava.Callback;
-import net.twasi.obsremotejava.OBSRemoteController;
-import net.twasi.obsremotejava.objects.Scene;
-import net.twasi.obsremotejava.objects.Source;
-import net.twasi.obsremotejava.requests.ResponseBase;
-import net.twasi.obsremotejava.requests.GetSceneList.GetSceneListResponse;
-import net.twasi.obsremotejava.requests.GetVersion.GetVersionResponse;
+import project.gui.AppWindow;
+import project.gui.GuiManager;
 import project.obs.OBSController;
 
 public class Main {
 
 	public static void main(String[] args) {
-
+		GuiManager manager = new GuiManager();
+		manager.startTimer();
+		//manager.start();
 //		OBSRemoteController controller = new OBSRemoteController("ws://localhost:4444", false);
 //
 //		if (controller.isFailed()) { // Awaits response from OBS
@@ -20,7 +17,7 @@ public class Main {
 //			System.out.println("Yhteyttä ei voitu muodostaa.");
 //		}
 		
-		betterStructure();
+//		betterStructure();
 		
 //		controller.registerConnectCallback(new Callback() {
 //			@Override
@@ -67,8 +64,9 @@ public class Main {
 	}
 	
 	public static void betterStructure() {
-		OBSController controller = OBSController.connect("ws://localhost:4444");
+		OBSController controller = new OBSController(new GuiManager());
 		
+		controller.connect("ws://localhost:4444");
 		controller.listenEvents();
 		controller.setCurrentScene("Pichu").printAllScenesAndSources();
 	}

@@ -1,17 +1,19 @@
 package project.gui;
 
-import java.awt.Dimension;
-
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class AppWindow extends JFrame {
 
-	public AppWindow(String title) {
+	private static final long serialVersionUID = 1L;
+
+	public AppWindow(String title, JPanel contents) {
 		setTitle(title);
-		setPreferredSize(new Dimension(500, 316));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		add(App.getApplication());
+		getContentPane().add(contents);
+		pack();
+		setAlwaysOnTop(true);
 		setVisible(true);
 	}
 }

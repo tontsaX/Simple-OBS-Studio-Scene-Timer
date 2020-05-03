@@ -1,23 +1,22 @@
 package project.gui;
 
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 public class App extends JPanel {
 	
-	private JPanel scenesPanel, timerPanel;
-	
-	private App() {
-		super(new FlowLayout());
-		scenesPanel = new ScenesPanel();
-		timerPanel = new TimerPanel();
+	public App( JPanel scenesPanel, JPanel timerPanel) {
+		super(new BorderLayout());
+//		setPreferredSize(new Dimension(500, 316));
 		
-		add(scenesPanel);
-		add(timerPanel);
-	}
-	
-	public static JPanel getApplication() {
-		return new App();
+//		Dimension innerPanelSize = new Dimension(getWidth()/2, getHeight());
+//		scenesPanel.setPreferredSize(innerPanelSize);
+//		timerPanel.setPreferredSize(innerPanelSize);
+		
+		add(scenesPanel, BorderLayout.LINE_START);
+		add(timerPanel, BorderLayout.LINE_END);
 	}
 }

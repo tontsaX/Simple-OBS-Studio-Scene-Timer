@@ -15,16 +15,16 @@ public class OBSController {
 	private OBSRemoteController connection;
 	private GuiManager guiManager;
 	
-	private OBSController(String address) {
+	public OBSController(GuiManager guiManager) {
+		this.guiManager = guiManager;
+	}
+	
+	public void connect(String address) {
 		connection = new OBSRemoteController(address, false);
 		if (connection.isFailed()) { // Awaits response from OBS
 			// Here you can handle a failed connection request
 			System.out.println("Yhteyttä ei voitu muodostaa.");
 		}
-	}
-	
-	public static OBSController connect(String address) {
-		return new OBSController(address);
 	}
 	
 	public void listenEvents() {
