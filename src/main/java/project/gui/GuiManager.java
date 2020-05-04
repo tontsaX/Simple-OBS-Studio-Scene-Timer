@@ -18,8 +18,6 @@ public class GuiManager {
 	private ScenesPanel scenesPanel;
 	private TimerPanel timerPanel;
 	private App application;
-	private Thread timeManager;
-	private boolean running;
 	
 	public GuiManager() {
 		scenesPanel = new ScenesPanel();
@@ -30,7 +28,11 @@ public class GuiManager {
 		timerPanel.setPreferredSize(panelSize);
 		
 		application = new App(scenesPanel, timerPanel);
-		new AppWindow("My App", application);
+		new AppWindow("Media Source Timer beta", application);
+	}
+	
+	public boolean appReady() {
+		return application.appReady();
 	}
 	
 	public void markCurrentScene(String sceneTxt) {
@@ -72,14 +74,16 @@ public class GuiManager {
 		List<String> sceneLabelTxts = new ArrayList<>();
 		
 		for(PoorScene scene: scenes) {
-//			sceneLabelTxts.add(scene.toString());
 			sceneLabelTxts.add(scene.getName());
 		}
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
+				scenesPanel.removeAll();
 				scenesPanel.updateSceneLabels(sceneLabelTxts);
+				scenesPanel.revalidate();
+				scenesPanel.repaint();
 			}
 		});
 	}

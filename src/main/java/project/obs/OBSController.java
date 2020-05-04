@@ -1,16 +1,16 @@
 package project.obs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import net.twasi.obsremotejava.Callback;
 import net.twasi.obsremotejava.OBSRemoteController;
 import net.twasi.obsremotejava.events.responses.SwitchScenesResponse;
 import net.twasi.obsremotejava.objects.Scene;
 import net.twasi.obsremotejava.objects.Source;
-import net.twasi.obsremotejava.requests.ResponseBase;
+import net.twasi.obsremotejava.requests.GetCurrentScene.GetCurrentSceneResponse;
 import net.twasi.obsremotejava.requests.GetSceneList.GetSceneListResponse;
-import net.twasi.obsremotejava.requests.GetSourceSettings.GetSourceSettingsResponse;
 import project.gui.GuiManager;
 
 public class OBSController {
@@ -18,8 +18,7 @@ public class OBSController {
 	private OBSRemoteController connection;
 	private GuiManager guiManager;
 	private List<PoorScene> scenes;
-	
-	private boolean sceneListChanged;
+	private Map<String, Boolean> sceneMap;
 	
 	public OBSController() {
 		
@@ -28,15 +27,11 @@ public class OBSController {
 	public OBSController(GuiManager guiManager) {
 		this.guiManager = guiManager;
 		this.scenes = new ArrayList<>();
+		this.sceneMap = new HashMap<>();
 	}
 	
 	public void connect(String address) {
 		connection = new OBSRemoteController(address, false);
-		
-		if(!connection.isFailed()) {
-			guiManager.updateConnectionIndicator(true);
-			guiManager.updateConnectionMessage("Connected");
-		}
 		
 		while (connection.isFailed()) { // Awaits response from OBS
 			guiManager.updateConnectionMessage("Connection failed");
@@ -56,15 +51,27 @@ public class OBSController {
 			}
 		}
 		
+		guiManager.updateConnectionIndicator(true);
+		guiManager.updateConnectionMessage("Connected");
 	}
 	
-	public void listenEvents() {
+	public void setEventListeners() {
 		connection.registerSwitchScenesCallback(res -> {
-            SwitchScenesResponse switchScenesResponse = (SwitchScenesResponse) res;
-            System.out.println("Switched to scene: " + switchScenesResponse.getSceneName());
+			guiManager.stopTimer();
+			
+            String currentScene = ((SwitchScenesResponse) res).getSceneName();
+            guiManager.markCurrentScene(currentScene);
+            
+            if(sceneMap.get(currentScene)) {
+            	guiManager.startTimer();
+            }
         });
 		
-		execute();
+		connection.registerScenesChangedCallback(res -> {
+			scenes = new ArrayList<>();
+			sceneMap = new HashMap<>();
+			setScenesOnGui().getCurrentSceneMarked();
+		});
 	}
 
 	public void execute() {
@@ -75,28 +82,18 @@ public class OBSController {
         }
 	}
 	
-	public OBSController setCurrentScene(String sceneName) {
-		connection.setCurrentScene(sceneName, new Callback() {
-            @Override
-            public void run(ResponseBase response) {
-                System.out.println("Change scene:" + response.getStatus());
-            }
-        });
-		return this;
-	}
-	
-	public OBSController inspectCurrentScene() {
-		return this;
-	}
-	
-	public OBSController setScenesOnView() {
+	public OBSController setScenesOnGui() {
 		connection.getScenes(innerResponse -> {
 			GetSceneListResponse sceneListResponse = (GetSceneListResponse) innerResponse;
+			String sceneName;
             for(Scene scene: sceneListResponse.getScenes()) {
+            	sceneName = scene.getName();
             	if(hasMediaSource(scene)) {
-        			scenes.add(new PoorScene(scene.getName(), true));
+        			scenes.add(new PoorScene(sceneName, true));
+        			sceneMap.put(sceneName, true);
         		} else {
-        			scenes.add(new PoorScene(scene.getName(), false));
+        			scenes.add(new PoorScene(sceneName, false));
+        			sceneMap.put(sceneName, false);
         		}
             }
             
@@ -108,34 +105,25 @@ public class OBSController {
 	
 	private boolean hasMediaSource(Scene scene) {
 		for(Source source: scene.getSources()) {
+			System.out.println(source.getType());
 			if(source.getType().equals("ffmpeg_source")) {
 				return true;
 			}
 		}
 		return false;
 	}
-
-	public void printAllScenesAndSources() {
-		connection.getScenes(innerResponse -> {
-			GetSceneListResponse sceneListResponse = (GetSceneListResponse) innerResponse;
-            for (Scene scene : sceneListResponse.getScenes()) {
-            	
-                System.out.println("Name: " + scene.getName());
-                for (Source src : scene.getSources()) {
-                	if(src.getType().equals("ffmpeg_source")) {
-	                	String sourceName = src.getName();
-	                    System.out.println("  " + sourceName + " Source type: " + src.getType());
-                	}
-                    // tyyppi on ffmpeg_source, joka on open source videolähde
-                    // kuva antaa image_source
-                }
+	
+	public void getCurrentSceneMarked() {
+		connection.getCurrentScene(res -> {
+			GetCurrentSceneResponse currentScene = (GetCurrentSceneResponse) res;
+			guiManager.stopTimer();
+			String sceneName = currentScene.getName();
+            guiManager.markCurrentScene(sceneName);
+            guiManager.startTimer();
+            if(!sceneMap.get(sceneName)) {
+            	guiManager.stopTimer();
             }
-            
-            connection.getSourceSettings("Meowth 2 gif", sourceResponse -> {
-            	GetSourceSettingsResponse settings = (GetSourceSettingsResponse) sourceResponse;
-            	System.out.println(settings.getSourceSettings().get("restart_on_activate"));
-            });
-		});
+        });
 	}
 	
 }

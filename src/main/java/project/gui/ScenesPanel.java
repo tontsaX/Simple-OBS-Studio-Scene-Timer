@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 public class ScenesPanel extends JPanel {
 
+	private static final long serialVersionUID = 1L;
 	List<JLabel> sceneLabels;
 	
 	public ScenesPanel() {
@@ -21,31 +22,40 @@ public class ScenesPanel extends JPanel {
 	public void markCurrentScene(String sceneTxt) {
 		if(sceneLabels != null) {
 			for(JLabel sceneLabel: sceneLabels) {
-				if(sceneLabel.isOpaque()) {
-					// outo juttu, että taustaväri tarvitsee vaihtaa ennen kuin se muuttuu näkymättömäksi
-					sceneLabel.setBackground(getForeground());
+//				if(sceneLabel.isOpaque()) {
+//					// outo juttu, mutta taustaväri tarvitsee vaihtaa ennen kuin se muuttuu näkymättömäksi
+//					sceneLabel.setBackground(getForeground());
+//					sceneLabel.setOpaque(false);
+//				}
+//				else if(sceneLabel.getText().equals(sceneTxt)) {
+//					sceneLabel.setBackground(Color.decode("#D6EAF8"));
+//					sceneLabel.setOpaque(true);
+//					break;
+//				}
+				if(sceneLabel.getText().equals(sceneTxt)) {
+//					sceneLabel.setBackground(Color.decode("#D6EAF8"));
+					sceneLabel.setOpaque(true);
+				} else {
+//					sceneLabel.setBackground(getForeground());
 					sceneLabel.setOpaque(false);
 				}
-				else if(sceneLabel.getText().equals(sceneTxt)) {
-					sceneLabel.setBackground(Color.decode("#D6EAF8"));
-					sceneLabel.setOpaque(true);
-					break;
-				}
+				repaint();
 			}
 		}
 	}
 
 	public void updateSceneLabels(List<String> sceneLabelTxts) {
+		setLayout(new GridLayout(sceneLabelTxts.size(), 1));
 		createSceneLabels(sceneLabelTxts);
 		addSceneLabels();
 	}
 	
 	private void createSceneLabels(List<String> sceneLabelTxts) {
-		sceneLabels = new ArrayList<>();
+		sceneLabels = new ArrayList<>(); // tyhjä
 		for(String sceneLabelTxt: sceneLabelTxts) {
 			JLabel sceneLabel = new JLabel();
 			sceneLabel.setText(sceneLabelTxt);
-			sceneLabel.setHorizontalAlignment(JLabel.LEADING);
+			sceneLabel.setBackground(Color.decode("#D6EAF8"));
 			sceneLabels.add(sceneLabel);
 		}
 	}
@@ -56,6 +66,4 @@ public class ScenesPanel extends JPanel {
 		}
 	}
 	
-	private void updateSceneList(List<String> sceneLabelTxts) {
-	}
 }

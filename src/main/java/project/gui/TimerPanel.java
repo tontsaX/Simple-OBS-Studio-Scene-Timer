@@ -35,29 +35,33 @@ public class TimerPanel extends JPanel implements ActionListener {
 	}
 	
 	public void startTimer() {
-		minutes = 0;
-		seconds = 0;
-		
 		timeUpdater = new Timer(1000, this);
 		timeUpdater.start();
 		actionPerformed(new ActionEvent(this, 1, "dummy"));
 	}
 	
 	public void stopTimer() {
-		timeUpdater.stop();
+		if(timeUpdater != null) {
+			timeUpdater.stop();
+			elapsedSeconds = 0;
+			minutes = 0;
+			seconds = 0;
+		}
+		timerLabel.setText("00:00");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		setTimeLabel(minutes + ":" + seconds);
-		seconds++;
-		elapsedSeconds = seconds;
-		minutes = elapsedSeconds / 60;
-		
-		if(elapsedSeconds % 60 == 0) {
-			seconds = 0;
+		if(seconds < 10) {
+		 setTimeLabel(minutes + ":0" + seconds);
+		} else {
+			setTimeLabel(minutes + ":" + seconds);
 		}
+		
+		elapsedSeconds++;
+		seconds = elapsedSeconds % 60;
+		minutes = elapsedSeconds / 60;
 		
 	}
 }

@@ -10,8 +10,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class App extends JPanel {
+
+	private static final long serialVersionUID = 1L;
 	
 	private ConnectionBox connectionBox;
+	private boolean appReady;
 	
 	public App(JPanel scenesPanel, JPanel timerPanel) {
 		super(new BorderLayout());
@@ -33,7 +36,19 @@ public class App extends JPanel {
 		connectionBox.repaint();
 	}
 	
+	@Override
+	public void addNotify() {
+		super.addNotify();
+		appReady = true;
+	}
+	
+	public boolean appReady() {
+		return appReady;
+	}
+	
 	class ConnectionBox extends JLabel {
+
+		private static final long serialVersionUID = 1L;
 		
 		private Color boxColor;
 		private String connectionTxt;
@@ -62,4 +77,6 @@ public class App extends JPanel {
 			connectionTxt = txt;
 		}
 	}
+
+
 }
