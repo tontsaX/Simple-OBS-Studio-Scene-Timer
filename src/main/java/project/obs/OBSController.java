@@ -19,7 +19,11 @@ public class OBSController {
 	private GuiManager guiManager;
 	private List<PoorScene> scenes;
 	
-	private volatile boolean sceneListChanged;
+	private boolean sceneListChanged;
+	
+	public OBSController() {
+		
+	}
 	
 	public OBSController(GuiManager guiManager) {
 		this.guiManager = guiManager;
@@ -28,10 +32,30 @@ public class OBSController {
 	
 	public void connect(String address) {
 		connection = new OBSRemoteController(address, false);
-		if (connection.isFailed()) { // Awaits response from OBS
-			// Here you can handle a failed connection request
-			System.out.println("Yhteyttä ei voitu muodostaa.");
+		
+		if(!connection.isFailed()) {
+			guiManager.updateConnectionIndicator(true);
+			guiManager.updateConnectionMessage("Connected");
 		}
+		
+		while (connection.isFailed()) { // Awaits response from OBS
+			guiManager.updateConnectionMessage("Connection failed");
+			
+			try {
+				Thread.sleep(2000);
+				guiManager.updateConnectionMessage("Connecting");
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			connection = new OBSRemoteController(address, false);
+			
+			if(!connection.isFailed()) {
+				guiManager.updateConnectionIndicator(true);
+				guiManager.updateConnectionMessage("Connected");
+			}
+		}
+		
 	}
 	
 	public void listenEvents() {

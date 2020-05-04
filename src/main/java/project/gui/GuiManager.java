@@ -42,22 +42,28 @@ public class GuiManager {
 		});
 	}
 	
+	public void updateConnectionMessage(String message) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				application.updateConnectionMessage(message);
+			}	
+		});
+	}
+	
 	public void updateConnectionIndicator(boolean connected) {
 		Color connectionIndicator;
-		String connectionTxt;
 		
 		if(connected) {
 			connectionIndicator = Color.green.darker();
-			connectionTxt = "Connected";
 		} else {
 			connectionIndicator = Color.red;
-			connectionTxt = "Connecting";
 		}
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				application.updateConnectionIndicator(connectionIndicator, connectionTxt);
+				application.updateConnectionIndicator(connectionIndicator);
 			}
 		});
 	}

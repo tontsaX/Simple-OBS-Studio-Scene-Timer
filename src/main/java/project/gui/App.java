@@ -23,9 +23,13 @@ public class App extends JPanel {
 		add(timerPanel, BorderLayout.LINE_END);
 	}
 	
-	public void updateConnectionIndicator(Color color, String connectionTxt) {
+	public void updateConnectionIndicator(Color color) {
 		connectionBox.setConnectionBoxColor(color);
-		connectionBox.setConnectionTxt(connectionTxt);
+		connectionBox.repaint();
+	}
+	
+	public void updateConnectionMessage(String message) {
+		connectionBox.setConnectionTxt(message);
 		connectionBox.repaint();
 	}
 	
