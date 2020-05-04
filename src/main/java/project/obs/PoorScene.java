@@ -37,6 +37,7 @@ public class PoorScene {
 	@Override
 	public String toString() {
 		if(hasMediaSource) {
+			// html tagit rivittävät merkkijonon, mutta säilyvät kokonaisuudessa
 			return "<html>" + name + " : " + "Contains a Media source" + "</html>";
 		}
 		return "<html>" + name + "</html>";

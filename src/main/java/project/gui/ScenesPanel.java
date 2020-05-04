@@ -19,10 +19,10 @@ public class ScenesPanel extends JPanel {
 	}
 	
 	public void markCurrentScene(String sceneTxt) {
-		System.out.println("About to check labels content");
 		if(sceneLabels != null) {
 			for(JLabel sceneLabel: sceneLabels) {
 				if(sceneLabel.isOpaque()) {
+					// outo juttu, että taustaväri tarvitsee vaihtaa ennen kuin se muuttuu näkymättömäksi
 					sceneLabel.setBackground(getForeground());
 					sceneLabel.setOpaque(false);
 				}

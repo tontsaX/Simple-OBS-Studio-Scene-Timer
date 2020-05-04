@@ -20,13 +20,13 @@ public class Main {
 		scenes.add(new PoorScene("Pichu", true));
 		manager.updateScenes(scenes);
 		
-		currentSceneTest("<html>Charmander Meowth : Contains a Media source</html>");
+		currentSceneTest("Charmander Meowth");
 		
 		Thread.sleep(5000);
 		
 		manager.stopTimer();
 		
-		currentSceneTest("<html>Pichu : Contains a Media source</html>");
+		currentSceneTest("Pichu");
 	}
 	
 	public static void currentSceneTest(String txt) {

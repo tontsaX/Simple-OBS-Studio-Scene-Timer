@@ -66,7 +66,8 @@ public class GuiManager {
 		List<String> sceneLabelTxts = new ArrayList<>();
 		
 		for(PoorScene scene: scenes) {
-			sceneLabelTxts.add(scene.toString());
+//			sceneLabelTxts.add(scene.toString());
+			sceneLabelTxts.add(scene.getName());
 		}
 		
 		SwingUtilities.invokeLater(new Runnable() {

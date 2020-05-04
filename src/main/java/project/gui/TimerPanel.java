@@ -1,6 +1,7 @@
 package project.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,6 +22,8 @@ public class TimerPanel extends JPanel implements ActionListener {
 		super(new BorderLayout());
 		
 		timerLabel = new JLabel("00:00");
+		timerLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 45));
+		
 		timerLabel.setHorizontalAlignment(JLabel.CENTER);
 		timerLabel.setVerticalAlignment(JLabel.CENTER);
 
