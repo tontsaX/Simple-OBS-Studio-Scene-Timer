@@ -1,5 +1,8 @@
 package project.obs;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.twasi.obsremotejava.Callback;
 import net.twasi.obsremotejava.OBSRemoteController;
 import net.twasi.obsremotejava.events.responses.SwitchScenesResponse;
@@ -14,9 +17,13 @@ public class OBSController {
 	
 	private OBSRemoteController connection;
 	private GuiManager guiManager;
+	private List<PoorScene> scenes;
+	
+	private volatile boolean sceneListChanged;
 	
 	public OBSController(GuiManager guiManager) {
 		this.guiManager = guiManager;
+		this.scenes = new ArrayList<>();
 	}
 	
 	public void connect(String address) {
@@ -38,7 +45,6 @@ public class OBSController {
 
 	public void execute() {
 		try {
-			System.out.println("execute");
             connection.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -59,6 +65,32 @@ public class OBSController {
 		return this;
 	}
 	
+	public OBSController setScenesOnView() {
+		connection.getScenes(innerResponse -> {
+			GetSceneListResponse sceneListResponse = (GetSceneListResponse) innerResponse;
+            for(Scene scene: sceneListResponse.getScenes()) {
+            	if(hasMediaSource(scene)) {
+        			scenes.add(new PoorScene(scene.getName(), true));
+        		} else {
+        			scenes.add(new PoorScene(scene.getName(), false));
+        		}
+            }
+            
+            guiManager.updateScenes(scenes);
+        });
+		
+		return this;
+	}
+	
+	private boolean hasMediaSource(Scene scene) {
+		for(Source source: scene.getSources()) {
+			if(source.getType().equals("ffmpeg_source")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void printAllScenesAndSources() {
 		connection.getScenes(innerResponse -> {
 			GetSceneListResponse sceneListResponse = (GetSceneListResponse) innerResponse;

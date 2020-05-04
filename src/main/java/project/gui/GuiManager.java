@@ -1,8 +1,12 @@
 package project.gui;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
+
+import project.obs.PoorScene;
 
 // t‰‰ luokka p‰ivitt‰‰ swing komponentteja
 public class GuiManager implements Runnable {
@@ -12,9 +16,8 @@ public class GuiManager implements Runnable {
 	
 	private ScenesPanel scenesPanel;
 	private TimerPanel timerPanel;
-	private boolean running;
 	private Thread timeManager;
-	
+	private boolean running;
 	
 	public GuiManager() {
 		scenesPanel = new ScenesPanel();
@@ -37,12 +40,17 @@ public class GuiManager implements Runnable {
 		});
 	}
 	
-	public void updateScenes() {
+	public void updateScenes(List<PoorScene> scenes) {
+		List<String> sceneLabelTxts = new ArrayList<>();
+		
+		for(PoorScene scene: scenes) {
+			sceneLabelTxts.add(scene.toString());
+		}
+		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
-				
+				scenesPanel.updateSceneLabels(sceneLabelTxts);
 			}
 		});
 	}
