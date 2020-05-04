@@ -1,5 +1,6 @@
 package project.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,13 +10,14 @@ import javax.swing.SwingUtilities;
 import project.obs.PoorScene;
 
 // t‰‰ luokka p‰ivitt‰‰ swing komponentteja
-public class GuiManager implements Runnable {
+public class GuiManager {
 	
 	private static final int APPWIDTH = 500;
 	private static final int APPHEIGHT = 316;
 	
 	private ScenesPanel scenesPanel;
 	private TimerPanel timerPanel;
+	private App application;
 	private Thread timeManager;
 	private boolean running;
 	
@@ -27,16 +29,36 @@ public class GuiManager implements Runnable {
 		scenesPanel.setPreferredSize(panelSize);
 		timerPanel.setPreferredSize(panelSize);
 		
-		App application = new App(scenesPanel, timerPanel);
+		application = new App(scenesPanel, timerPanel);
 		new AppWindow("My App", application);
 	}
 	
-	public void startTimer() {
+	public void markCurrentScene(String sceneTxt) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				timerPanel.startTimer();
-			}	
+				scenesPanel.markCurrentScene(sceneTxt);
+			}
+		});
+	}
+	
+	public void updateConnectionIndicator(boolean connected) {
+		Color connectionIndicator;
+		String connectionTxt;
+		
+		if(connected) {
+			connectionIndicator = Color.green.darker();
+			connectionTxt = "Connected";
+		} else {
+			connectionIndicator = Color.red;
+			connectionTxt = "Connecting";
+		}
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				application.updateConnectionIndicator(connectionIndicator, connectionTxt);
+			}
 		});
 	}
 	
@@ -54,18 +76,22 @@ public class GuiManager implements Runnable {
 			}
 		});
 	}
-
-	@Override
-	public void run() {
-
+	
+	public void startTimer() {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				timerPanel.startTimer();
+			}	
+		});
 	}
 	
-	public void start() {
-		timeManager = new Thread(this);
-		timeManager.start();
-	}
-	
-	public void stop() {
-		running = false;
+	public void stopTimer() {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				timerPanel.stopTimer();
+			}	
+		});
 	}
 }

@@ -3,7 +3,7 @@ package project.obs;
 public class PoorScene {
 	
 	private String name;
-	private boolean hasMediaSource;
+	private boolean hasMediaSource, isCurrentScene;
 	
 	public PoorScene(String name, boolean hasMediaSource) {
 		this.name = name;
@@ -24,6 +24,14 @@ public class PoorScene {
 	
 	public void setHasMediaSource(boolean hasMediaSource) {
 		this.hasMediaSource = hasMediaSource;
+	}
+	
+	public boolean isCurrentScene() {
+		return isCurrentScene;
+	}
+	
+	public void setAsCurrentScene(boolean isCurrentScene) {
+		this.isCurrentScene = isCurrentScene;
 	}
 	
 	@Override

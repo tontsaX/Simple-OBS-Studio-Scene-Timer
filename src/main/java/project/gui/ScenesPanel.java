@@ -1,5 +1,6 @@
 package project.gui;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,23 @@ public class ScenesPanel extends JPanel {
 		super(new GridLayout(0,1));
 		setBorder(BorderFactory.createTitledBorder("Scenes"));
 	}
+	
+	public void markCurrentScene(String sceneTxt) {
+		System.out.println("About to check labels content");
+		if(sceneLabels != null) {
+			for(JLabel sceneLabel: sceneLabels) {
+				if(sceneLabel.isOpaque()) {
+					sceneLabel.setBackground(getForeground());
+					sceneLabel.setOpaque(false);
+				}
+				else if(sceneLabel.getText().equals(sceneTxt)) {
+					sceneLabel.setBackground(Color.decode("#D6EAF8"));
+					sceneLabel.setOpaque(true);
+					break;
+				}
+			}
+		}
+	}
 
 	public void updateSceneLabels(List<String> sceneLabelTxts) {
 		createSceneLabels(sceneLabelTxts);
@@ -27,7 +45,7 @@ public class ScenesPanel extends JPanel {
 		for(String sceneLabelTxt: sceneLabelTxts) {
 			JLabel sceneLabel = new JLabel();
 			sceneLabel.setText(sceneLabelTxt);
-			sceneLabel.setVerticalAlignment(JLabel.CENTER);
+			sceneLabel.setHorizontalAlignment(JLabel.LEADING);
 			sceneLabels.add(sceneLabel);
 		}
 	}
