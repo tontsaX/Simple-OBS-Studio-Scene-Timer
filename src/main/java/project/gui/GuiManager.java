@@ -9,7 +9,6 @@ import javax.swing.SwingUtilities;
 
 import project.obs.PoorScene;
 
-// t‰‰ luokka p‰ivitt‰‰ swing komponentteja
 public class GuiManager {
 	
 	private static final int APPWIDTH = 500;
