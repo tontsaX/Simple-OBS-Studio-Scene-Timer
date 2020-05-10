@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -16,7 +17,7 @@ public class App extends JPanel {
 	private ConnectionBox connectionBox;
 	private boolean appReady;
 	
-	public App(JPanel scenesPanel, JPanel timerPanel) {
+	public App(JComponent scenesPanel, JComponent timerPanel) {
 		super(new BorderLayout());
 		
 		connectionBox = new ConnectionBox();

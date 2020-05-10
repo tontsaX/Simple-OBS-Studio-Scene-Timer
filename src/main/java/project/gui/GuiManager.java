@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 import project.obs.PoorScene;
@@ -15,6 +17,7 @@ public class GuiManager {
 	private static final int APPHEIGHT = 316;
 	
 	private ScenesPanel scenesPanel;
+	private JScrollPane scrollPane;
 	private TimerPanel timerPanel;
 	private App application;
 	
@@ -26,7 +29,10 @@ public class GuiManager {
 		scenesPanel.setPreferredSize(panelSize);
 		timerPanel.setPreferredSize(panelSize);
 		
-		application = new App(scenesPanel, timerPanel);
+		scrollPane = new JScrollPane(scenesPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setPreferredSize(panelSize);
+		scrollPane.setBorder(BorderFactory.createTitledBorder("Scenes"));
+		application = new App(scrollPane, timerPanel);
 		new AppWindow("Media Source Timer beta", application);
 	}
 	
@@ -82,7 +88,9 @@ public class GuiManager {
 				scenesPanel.removeAll();
 				scenesPanel.updateSceneLabels(sceneLabelTxts);
 				scenesPanel.revalidate();
-				scenesPanel.repaint();
+//				scrollPane.revalidate();
+//				scenesPanel.repaint();
+				
 			}
 		});
 	}

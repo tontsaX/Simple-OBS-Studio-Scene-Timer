@@ -16,7 +16,7 @@ public class ScenesPanel extends JPanel {
 	
 	public ScenesPanel() {
 		super(new GridLayout(0,1));
-		setBorder(BorderFactory.createTitledBorder("Scenes"));
+//		setBorder(BorderFactory.createTitledBorder("Scenes"));
 	}
 	
 	public void markCurrentScene(String sceneTxt) {
