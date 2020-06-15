@@ -2,6 +2,7 @@ package project.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +23,14 @@ public class GuiManager {
 	private App application;
 	
 	public GuiManager() {
-		scenesPanel = new ScenesPanel();
+		Dimension panelSize = new Dimension(APPWIDTH / 2, APPHEIGHT);
+		scenesPanel = new ScenesPanel(panelSize);
 		timerPanel = new TimerPanel();
 		
-		Dimension panelSize = new Dimension(APPWIDTH / 2, APPHEIGHT);
-		scenesPanel.setPreferredSize(panelSize);
+//		scenesPanel.setPreferredSize(panelSize);
 		timerPanel.setPreferredSize(panelSize);
 		
-		scrollPane = new JScrollPane(scenesPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane = new JScrollPane(scenesPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setPreferredSize(panelSize);
 		scrollPane.setBorder(BorderFactory.createTitledBorder("Scenes"));
 		application = new App(scrollPane, timerPanel);

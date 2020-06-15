@@ -1,11 +1,11 @@
 package project.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -15,8 +15,12 @@ public class ScenesPanel extends JPanel {
 	List<JLabel> sceneLabels;
 	
 	public ScenesPanel() {
-		super(new GridLayout(0,1));
+//		super(new GridLayout(0,1));
 //		setBorder(BorderFactory.createTitledBorder("Scenes"));
+	}
+	
+	public ScenesPanel(Dimension preferredSize) {
+		setPreferredSize(preferredSize);
 	}
 	
 	public void markCurrentScene(String sceneTxt) {
@@ -33,7 +37,7 @@ public class ScenesPanel extends JPanel {
 	}
 
 	public void updateSceneLabels(List<String> sceneLabelTxts) {
-		setLayout(new GridLayout(sceneLabelTxts.size(), 1));
+//		setLayout(new GridLayout(sceneLabelTxts.size(), 1));
 		createSceneLabels(sceneLabelTxts);
 		addSceneLabels();
 	}
@@ -42,10 +46,13 @@ public class ScenesPanel extends JPanel {
 		sceneLabels = new ArrayList<>(); // tyhjä
 		for(String sceneLabelTxt: sceneLabelTxts) {
 			JLabel sceneLabel = new JLabel();
+			sceneLabel.setPreferredSize(new Dimension(getPreferredSize().width, 70));
 			sceneLabel.setText(sceneLabelTxt);
 			sceneLabel.setBackground(Color.decode("#D6EAF8"));
 			sceneLabels.add(sceneLabel);
 		}
+		
+		setPreferredSize(new Dimension(getPreferredSize().width, 70 * sceneLabels.size() + 16));
 	}
 	
 	private void addSceneLabels() {
