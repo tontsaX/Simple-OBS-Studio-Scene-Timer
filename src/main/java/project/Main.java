@@ -9,7 +9,12 @@ public class Main {
 		GuiManager guiManager = new GuiManager();
 		OBSController controller = new OBSController(guiManager);
 		
-		controller.connect("ws://localhost:4444", "salasana").doStuff();
+		if(args.length != 0) {
+			controller.connect("ws://localhost:4444", args[0]).doStuff();
+		} else {
+			controller.connect("ws://localhost:4444", null).doStuff();
+		}
+		
 	}
 	
 }
