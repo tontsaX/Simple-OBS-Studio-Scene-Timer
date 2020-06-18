@@ -24,15 +24,17 @@ public class GuiManager {
 	
 	public GuiManager() {
 		Dimension panelSize = new Dimension(APPWIDTH / 2, APPHEIGHT);
-		scenesPanel = new ScenesPanel(panelSize);
-		timerPanel = new TimerPanel();
 		
-//		scenesPanel.setPreferredSize(panelSize);
+		timerPanel = new TimerPanel();
 		timerPanel.setPreferredSize(panelSize);
+		
+		scenesPanel = new ScenesPanel(panelSize);
 		
 		scrollPane = new JScrollPane(scenesPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setPreferredSize(panelSize);
 		scrollPane.setBorder(BorderFactory.createTitledBorder("Scenes"));
+		scrollPane.getVerticalScrollBar().setUnitIncrement(50);
+		
 		application = new App(scrollPane, timerPanel);
 		new AppWindow("Media Source Timer beta", application);
 	}

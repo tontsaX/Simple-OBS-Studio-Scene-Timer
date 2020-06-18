@@ -2,22 +2,20 @@ package project.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JViewport;
 
 public class ScenesPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	private int labelHeight, bLabelPadding;
 	List<JLabel> sceneLabels;
-	
-	public ScenesPanel() {
-//		super(new GridLayout(0,1));
-//		setBorder(BorderFactory.createTitledBorder("Scenes"));
-	}
 	
 	public ScenesPanel(Dimension preferredSize) {
 		setPreferredSize(preferredSize);
@@ -28,6 +26,7 @@ public class ScenesPanel extends JPanel {
 			for(JLabel sceneLabel: sceneLabels) {
 				if(sceneLabel.getText().equals(sceneTxt)) {
 					sceneLabel.setOpaque(true);
+					this.scrollRectToVisible(sceneLabel.getBounds());
 				} else {
 					sceneLabel.setOpaque(false);
 				}
@@ -37,22 +36,25 @@ public class ScenesPanel extends JPanel {
 	}
 
 	public void updateSceneLabels(List<String> sceneLabelTxts) {
-//		setLayout(new GridLayout(sceneLabelTxts.size(), 1));
 		createSceneLabels(sceneLabelTxts);
 		addSceneLabels();
 	}
 	
 	private void createSceneLabels(List<String> sceneLabelTxts) {
-		sceneLabels = new ArrayList<>(); // tyhjä
+		sceneLabels = new ArrayList<>();
+		labelHeight = 70;
+		
 		for(String sceneLabelTxt: sceneLabelTxts) {
 			JLabel sceneLabel = new JLabel();
-			sceneLabel.setPreferredSize(new Dimension(getPreferredSize().width, 70));
+			sceneLabel.setPreferredSize(new Dimension(getPreferredSize().width, labelHeight));
 			sceneLabel.setText(sceneLabelTxt);
 			sceneLabel.setBackground(Color.decode("#D6EAF8"));
 			sceneLabels.add(sceneLabel);
 		}
 		
-		setPreferredSize(new Dimension(getPreferredSize().width, 70 * sceneLabels.size() + 16));
+		bLabelPadding = 16;
+
+		setPreferredSize(new Dimension(getPreferredSize().width, (labelHeight + bLabelPadding) * sceneLabels.size()));
 	}
 	
 	private void addSceneLabels() {
