@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import net.twasi.obsremotejava.OBSRemoteController;
+import net.twasi.obsremotejava.callbacks.Callback;
 import net.twasi.obsremotejava.events.responses.SwitchScenesResponse;
 import net.twasi.obsremotejava.objects.Scene;
 import net.twasi.obsremotejava.objects.Source;
+import net.twasi.obsremotejava.requests.ResponseBase;
 import net.twasi.obsremotejava.requests.GetCurrentScene.GetCurrentSceneResponse;
 import net.twasi.obsremotejava.requests.GetSceneList.GetSceneListResponse;
+import net.twasi.obsremotejava.requests.GetVersion.GetVersionResponse;
 import project.gui.GuiManager;
 
 public class OBSController {
@@ -47,7 +50,11 @@ public class OBSController {
 				e.printStackTrace();
 			}
 			
-			connection = new OBSRemoteController(address, false);
+			if(password == null) {
+				connection = new OBSRemoteController(address, false);
+			} else {
+				connection = new OBSRemoteController(address, false, password);
+			}
 			
 			if(!connection.isFailed()) {
 				guiManager.updateConnectionIndicator(true);
@@ -61,28 +68,38 @@ public class OBSController {
 		return this;
 	}
 	
-	public OBSController setEventListeners() {
+	public void doStuff() {
+		connection.registerConnectCallback(new Callback() {
+			@Override
+			public void run(ResponseBase response) {
+				setEventListeners();
+				setScenesOnGui().getCurrentSceneMarked();
+			}
+		});
+		
+		execute();
+	}
+	
+	public void setEventListeners() {
 		connection.registerSwitchScenesCallback(res -> {
 			guiManager.stopTimer();
-			
-            String currentScene = ((SwitchScenesResponse) res).getSceneName();
-            guiManager.markCurrentScene(currentScene);
-            
-            if(sceneMap.get(currentScene)) {
-            	guiManager.startTimer();
-            }
-        });
-		
+		    String currentScene = ((SwitchScenesResponse) res).getSceneName();
+		    guiManager.markCurrentScene(currentScene);
+		            
+		    if(sceneMap.get(currentScene)) {
+		    	guiManager.startTimer();
+		    }
+		});
+				
 		connection.registerScenesChangedCallback(res -> {
 			scenes = new ArrayList<>();
 			sceneMap = new HashMap<>();
 			setScenesOnGui().getCurrentSceneMarked();
 		});
 		
-		return this;
 	}
 
-	public void execute() {
+	private void execute() {
 		try {
             connection.await();
         } catch (InterruptedException e) {
@@ -90,24 +107,30 @@ public class OBSController {
         }
 	}
 	
+	public void build() {
+		
+	}
+	
 	public OBSController setScenesOnGui() {
+	            
 		connection.getScenes(innerResponse -> {
 			GetSceneListResponse sceneListResponse = (GetSceneListResponse) innerResponse;
 			String sceneName;
-            for(Scene scene: sceneListResponse.getScenes()) {
-            	sceneName = scene.getName();
-            	if(hasMediaSource(scene)) {
-        			scenes.add(new PoorScene(sceneName, true));
-        			sceneMap.put(sceneName, true);
-        		} else {
-        			scenes.add(new PoorScene(sceneName, false));
-        			sceneMap.put(sceneName, false);
-        		}
-            }
-            
-            guiManager.updateScenes(scenes);
-        });
+			for(Scene scene: sceneListResponse.getScenes()) {
+				sceneName = scene.getName();
+	            if(hasMediaSource(scene)) {
+	            	scenes.add(new PoorScene(sceneName, true));
+	        		sceneMap.put(sceneName, true);
+	        	} else {
+	        		scenes.add(new PoorScene(sceneName, false));
+	        		sceneMap.put(sceneName, false);
+	        	}
+			}
+	            
+			guiManager.updateScenes(scenes);
 		
+		});
+			
 		return this;
 	}
 	
@@ -126,12 +149,14 @@ public class OBSController {
 			GetCurrentSceneResponse currentScene = (GetCurrentSceneResponse) res;
 			guiManager.stopTimer();
 			String sceneName = currentScene.getName();
-            guiManager.markCurrentScene(sceneName);
-            guiManager.startTimer();
-            if(!sceneMap.get(sceneName)) {
-            	guiManager.stopTimer();
-            }
-        });
+		    guiManager.markCurrentScene(sceneName);
+		    guiManager.startTimer();
+		    
+		    if(!sceneMap.get(sceneName)) {
+		    	guiManager.stopTimer();
+		    }
+		});
+		
 		return this;
 	}
 	
