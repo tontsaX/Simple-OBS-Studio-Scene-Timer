@@ -30,8 +30,12 @@ public class OBSController {
 		this.sceneMap = new HashMap<>();
 	}
 	
-	public void connect(String address) {
-		connection = new OBSRemoteController(address, false);
+	public void connect(String address, String password) {
+		if(password == null) {
+			connection = new OBSRemoteController(address, false);
+		} else {
+			connection = new OBSRemoteController(address, false, password);
+		}
 		
 		while (connection.isFailed()) { // Awaits response from OBS
 			guiManager.updateConnectionMessage("Connection failed");
