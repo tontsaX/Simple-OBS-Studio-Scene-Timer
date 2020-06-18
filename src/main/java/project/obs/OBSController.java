@@ -30,7 +30,7 @@ public class OBSController {
 		this.sceneMap = new HashMap<>();
 	}
 	
-	public void connect(String address, String password) {
+	public OBSController connect(String address, String password) {
 		if(password == null) {
 			connection = new OBSRemoteController(address, false);
 		} else {
@@ -57,9 +57,11 @@ public class OBSController {
 		
 		guiManager.updateConnectionIndicator(true);
 		guiManager.updateConnectionMessage("Connected");
+		
+		return this;
 	}
 	
-	public void setEventListeners() {
+	public OBSController setEventListeners() {
 		connection.registerSwitchScenesCallback(res -> {
 			guiManager.stopTimer();
 			
@@ -76,6 +78,8 @@ public class OBSController {
 			sceneMap = new HashMap<>();
 			setScenesOnGui().getCurrentSceneMarked();
 		});
+		
+		return this;
 	}
 
 	public void execute() {
@@ -117,7 +121,7 @@ public class OBSController {
 		return false;
 	}
 	
-	public void getCurrentSceneMarked() {
+	public OBSController getCurrentSceneMarked() {
 		connection.getCurrentScene(res -> {
 			GetCurrentSceneResponse currentScene = (GetCurrentSceneResponse) res;
 			guiManager.stopTimer();
@@ -128,6 +132,7 @@ public class OBSController {
             	guiManager.stopTimer();
             }
         });
+		return this;
 	}
 	
 }
