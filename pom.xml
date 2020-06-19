@@ -5,7 +5,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>OBS media source clock</name>
   <description>This is an attempt to create a clock program, which tracks a video media source time when added to the stream output.</description>
-
+  
   <dependencies>
     <!-- https://mvnrepository.com/artifact/net.twasi/obs-websocket-java -->
 	  <dependency>
@@ -14,5 +14,34 @@
 	    <version>1.0.5</version>
 	  </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+	  <plugin>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-assembly-plugin</artifactId>
+	    <executions>
+	        <execution>
+	            <phase>package</phase>
+	            <goals>
+	                <goal>single</goal>
+	            </goals>
+	            <configuration>
+	                <archive>
+	                <manifest>
+	                    <mainClass>
+	                        project.Main
+	                    </mainClass>
+	                </manifest>
+	                </archive>
+	                <descriptorRefs>
+	                    <descriptorRef>jar-with-dependencies</descriptorRef>
+	                </descriptorRefs>
+	            </configuration>
+	        </execution>
+	    </executions>
+	  </plugin>
+    </plugins>
+  </build>
 </project>
 
