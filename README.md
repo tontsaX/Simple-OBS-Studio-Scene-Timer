@@ -5,6 +5,7 @@ Unfortunately this program doesn't tell you the length of a media source in your
 The program uses an api developed in https://github.com/Twasi/websocket-obs-java.
 
 ---
+
 ## How to Use
 1. Download "Obs Studio Timer.jar". 
 2. Open your OBS Studio. 
